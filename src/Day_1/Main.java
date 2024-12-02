@@ -1,14 +1,15 @@
+package Day_1;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         // load the data
-        String filePath = "src/data.txt";
+        String filePath = "src/Day_1/data.txt";
         int numberOfRows = 1000;
 
         int[] leftList = new int[numberOfRows];
