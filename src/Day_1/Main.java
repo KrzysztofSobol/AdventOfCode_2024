@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         // load the data
         String filePath = "src/data.txt";
         int numberOfRows = 1000;
@@ -17,15 +17,11 @@ public class Main {
         String line;
         int rowIdx = 0;
 
-        try {
-            while((line = br.readLine()) != null){
-                String[] parts = line.trim().split("\\s+");
-                leftList[rowIdx] = Integer.parseInt(parts[0]);
-                rightList[rowIdx] = Integer.parseInt(parts[1]);
-                rowIdx++;
-            }
-        } catch (IOException e){
-            e.printStackTrace();
+        while((line = br.readLine()) != null){
+            String[] parts = line.trim().split("\\s+");
+            leftList[rowIdx] = Integer.parseInt(parts[0]);
+            rightList[rowIdx] = Integer.parseInt(parts[1]);
+            rowIdx++;
         }
 
         Arrays.sort(leftList);
