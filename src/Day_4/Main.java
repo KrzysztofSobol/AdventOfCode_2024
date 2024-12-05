@@ -23,7 +23,7 @@ public class Main {
                 diagonal.append(data[xyz + j][cols - j - 1]);
             }
             xyz--;
-            if (diagonal.length() > 0) {
+            if (!diagonal.isEmpty()) {
                 diagonalStrings.add(diagonal.toString());
             }
         }
