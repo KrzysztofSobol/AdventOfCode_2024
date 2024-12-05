@@ -41,7 +41,7 @@ public class Main {
             diagonalStrings.add(diagonal.toString());
         }
 
-        for (int i = 0; i < cols; i++) {
+        for (int i = 0; i < cols-1; i++) {
             StringBuilder diagonal = new StringBuilder();
             for (int j = 0; j <= i; j++) {
                 diagonal.append(data[cols-1-i+j][j]);
