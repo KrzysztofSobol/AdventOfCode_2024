@@ -18,6 +18,18 @@ public class Main {
         return null;
     }
 
+    private static int goUp(char[][] lab, int rows, int cols, int X, int Y){
+        int totalMoves = 0;
+        while(lab[X-1][Y] != '#'){
+            if(lab[X-1][Y] != null){
+
+            }
+            totalMoves++;
+            X--;
+        }
+
+    }
+
     public static void main(String[] args) throws IOException {
         String filePath = "src/Day_6/data.txt";
         int rows = 10;
@@ -35,6 +47,7 @@ public class Main {
         }
 
         GuardPosition guardPos = findTheGuard(lab, rows, cols);
+        System.out.println(guardPos);
 
     }
 }
