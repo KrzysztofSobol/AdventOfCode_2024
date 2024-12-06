@@ -21,20 +21,22 @@ public class Main {
         }
 
         int total = 0;
-        // good old bruteforce solution cus its 2am (yes I did use labeled break)
+        // good old "bruteforce" solution cus its 2am
         for(List<Integer> list : arrayOfLists){
-            outerLoop:
+            boolean wasWrong = false;
             for(int i = 0; i < list.size(); i++){
                 for(int[] row : twoDArray){
                     if(row[0] == list.get(i)){
                         if(!isInOrder(row[1], i, list)){
-                            System.out.println(list);
-                            int middleIndex = list.size() / 2;
-                            System.out.println("Middle: " + list.get(middleIndex));
-                            total += list.get(middleIndex);
+                            i=0;
+                            wasWrong = true;
                         }
                     }
                 }
+            }
+            if(wasWrong){
+                int middleIndex = list.size() / 2;
+                total += list.get(middleIndex);
             }
         }
         System.out.println(total);
@@ -43,7 +45,6 @@ public class Main {
     private static boolean isInOrder(int lookFor, int index, List<Integer> list){
         for(int i = index-1; i>=0; i--){
             if(list.get(i) == lookFor){
-                System.out.println();
                 int temp;
                 temp = list.get(index);
                 list.set(index, list.get(i));
