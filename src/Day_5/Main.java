@@ -55,25 +55,6 @@ public class Main {
         return true;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private static List<int[]> loadTwoDArray(String filePath) throws IOException {
         List<int[]> result = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
