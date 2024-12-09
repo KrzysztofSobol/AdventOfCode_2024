@@ -35,5 +35,10 @@ public class Main {
 
         System.out.println("Results: " + results);
         System.out.println("Equations: " + equations);
+
+        for(int i = 0; i<results.size(); i++){
+            int result = results.get(i);
+            List<Integer> equation = equations.get(i);
+        }
     }
 }
