@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -13,6 +12,7 @@ public class Main {
         String filePath = "src/Day_7/data.txt";
         List<Integer> results = new ArrayList<>();
         List<List<Integer>> equations = new ArrayList<>();
+        int sum = 0;
 
         BufferedReader br = new BufferedReader(new FileReader(filePath));
         String line;
@@ -37,8 +37,19 @@ public class Main {
         System.out.println("Equations: " + equations);
 
         for(int i = 0; i<results.size(); i++){
-            int result = results.get(i);
+            int expectedResult = results.get(i);
             List<Integer> equation = equations.get(i);
+            int combinationsTotal = (int) Math.pow(2, equation.size() - 1);
+
+            System.out.println("Decimal: " + i + "  Binary: " + Integer.toBinaryString(i));
+            
+
+            for(int j = 0; j < combinationsTotal; j++){
+                int result = 0;
+                if(expectedResult == result){
+                    sum += result;
+                }
+            }
         }
     }
 }
