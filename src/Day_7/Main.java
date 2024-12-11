@@ -31,7 +31,7 @@ public class Main {
             number /= 3;
         }
 
-        return String.format("%" + padLength + "s", ternary.toString()).replace(' ', '0');
+        return String.format("%" + padLength + "s", ternary).replace(' ', '0');
     }
 
     public static long solveEquation(String combination, List<Long> numbers){
