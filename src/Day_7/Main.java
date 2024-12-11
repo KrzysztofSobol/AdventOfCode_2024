@@ -10,15 +10,28 @@ public class Main {
 
     public static List<String> generateCombinations(int length) {
         List<String> combinations = new ArrayList<>();
-        int totalCombinations = (int) Math.pow(2, length - 1);
+        int totalCombinations = (int) Math.pow(3, length - 1);
 
         for (int i = 0; i < totalCombinations; i++) {
-            String binary = String.format("%" + (length - 1) + "s", Integer.toBinaryString(i))
-                    .replace(' ', '0');
-            combinations.add(binary);
+            String ternary = convertToTernary(i, length - 1);
+            combinations.add(ternary);
         }
 
         return combinations;
+    }
+
+    private static String convertToTernary(int number, int padLength) {
+        if (number == 0) {
+            return String.format("%" + padLength + "s", "0").replace(' ', '0');
+        }
+
+        StringBuilder ternary = new StringBuilder();
+        while (number > 0) {
+            ternary.insert(0, number % 3);
+            number /= 3;
+        }
+
+        return String.format("%" + padLength + "s", ternary.toString()).replace(' ', '0');
     }
 
     public static long solveEquation(String combination, List<Long> numbers){
@@ -28,8 +41,11 @@ public class Main {
         for(int i = 0; i < numbers.size() - 1; i++){
             if(combination.charAt(startIndex) == '0'){
                 result += numbers.get(i + 1);
-            } else {
+            } else if(combination.charAt(startIndex) == '1'){
                 result *= numbers.get(i + 1);
+            } else {
+                String combined = result + String.valueOf(numbers.get(i + 1));
+                result = Long.parseLong(combined);
             }
             startIndex++;
         }
@@ -40,7 +56,7 @@ public class Main {
         String filePath = "src/Day_7/data.txt";
         List<Long> results = new ArrayList<>();
         List<List<Long>> equations = new ArrayList<>();
-        List<String> combinations = generateCombinations(12); // here we should input the longest list of numbers, didnt feel like doing it
+        List<String> combinations = generateCombinations(12);
         long sum = 0;
 
         BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -64,9 +80,9 @@ public class Main {
 
         for(int i = 0; i<results.size(); i++){
             long expectedResult = results.get(i);
-            long result = 0;
+            long result;
             List<Long> equation = equations.get(i);
-            int combinationsTotal = (int) Math.pow(2, equation.size() - 1);
+            int combinationsTotal = (int) Math.pow(3, equation.size() - 1);
 
             for(int j = 0; j < combinationsTotal; j++){
                 result = solveEquation(combinations.get(j), equation);
