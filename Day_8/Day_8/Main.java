@@ -19,7 +19,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException {
-        final String filePath = "src/Day_8/data.txt";
+        final String filePath = "Day_8/data.txt";
 
         // 1. load data
         List<String> lines = Files.readAllLines(Paths.get(filePath));
@@ -57,16 +57,14 @@ public class Main {
                 for(int j = i+1; j < lSize; j++){
                     Pos end = list.get(j);
 
-                    int rowDiff = Math.abs(start.row - end.row);
-                    int colDiff = Math.abs(start.col - end.col);
+                    int rowDiff = start.row - end.row;
+                    int colDiff = start.col - end.col;
                     Pos diff = new Pos(rowDiff, colDiff);
 
-                    Pos up = start.sub(diff);
-                    Pos down = end.add(diff);
+                    Pos up = start.add(diff);
+                    Pos down = end.sub(diff);
 
                     count += getAntinode(numOfRows, numOfCols, grid, up);
-
-
                     count += getAntinode(numOfRows, numOfCols, grid, down);
                 }
             }
@@ -76,15 +74,12 @@ public class Main {
     }
 
     private static int getAntinode(int numOfRows, int numOfCols, char[][] grid, Pos pos) {
-        System.out.print(pos.row + " " + pos.col);
         if(pos.row >= 0 && pos.col >= 0 && pos.row < numOfRows && pos.col < numOfCols){
-            if(grid[pos.row][pos.col] == '.'){
+            if(grid[pos.row][pos.col] != '#'){
                 grid[pos.row][pos.col] = '#';
-                System.out.println(" coutned");
                 return 1;
             }
         }
-        System.out.println(" not counted");
         return 0;
     }
 }
