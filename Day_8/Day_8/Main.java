@@ -52,7 +52,15 @@ public class Main {
         for(Map.Entry<Character, LinkedList<Pos>> entry : nodeSet.entrySet()){
             LinkedList<Pos> list = entry.getValue();
             int lSize = list.size();
-            count += antinodesForFrequency(lSize, list, numOfRows, numOfCols, grid);
+            count += antinodesForFrequency(lSize, list, numOfRows, numOfCols, grid); // antinodes
+            count += lSize; // antennas (part 2 includes them as antinodes too)
+        }
+
+        for(int i = 0; i < numOfRows; i++){
+            for (int j = 0; j < numOfCols; j++){
+                System.out.print(grid[i][j] + " ");
+            }
+            System.out.println();
         }
 
         System.out.println(count);
@@ -69,23 +77,36 @@ public class Main {
                 int colDiff = start.col - end.col;
                 Pos diff = new Pos(rowDiff, colDiff);
 
-                Pos up = start.add(diff);
-                Pos down = end.sub(diff);
-
-                count += getAntinode(numOfRows, numOfCols, grid, up);
-                count += getAntinode(numOfRows, numOfCols, grid, down);
+                count += getAntinode(numOfRows, numOfCols, grid, start, diff, true);
+                count += getAntinode(numOfRows, numOfCols, grid, end, diff, false);
             }
         }
         return count;
     }
 
-    private static int getAntinode(int numOfRows, int numOfCols, char[][] grid, Pos pos) {
-        if(pos.row >= 0 && pos.col >= 0 && pos.row < numOfRows && pos.col < numOfCols){
-            if(grid[pos.row][pos.col] != '#'){
+    private static int getAntinode(int numOfRows, int numOfCols, char[][] grid, Pos start, Pos diff, boolean up) {
+        int count = 0;
+        Pos pos;
+
+        if(up){
+            pos = start.add(diff);
+        } else {
+            pos = start.sub(diff);
+        }
+
+        while(pos.row >= 0 && pos.col >= 0 && pos.row < numOfRows && pos.col < numOfCols) {
+            if(grid[pos.row][pos.col] == '.'){
                 grid[pos.row][pos.col] = '#';
-                return 1;
+                count++;
+            }
+
+            if(up){
+                pos = pos.add(diff);
+            } else {
+                pos = pos.sub(diff);
             }
         }
-        return 0;
+
+        return count;
     }
 }
