@@ -47,30 +47,36 @@ public class Main {
             }
         }
 
-        // count the antennas
+        // count the antinodes
         int count = 0;
         for(Map.Entry<Character, LinkedList<Pos>> entry : nodeSet.entrySet()){
             LinkedList<Pos> list = entry.getValue();
             int lSize = list.size();
-            for(int i = 0; i < lSize; i++){
-                Pos start = list.get(i);
-                for(int j = i+1; j < lSize; j++){
-                    Pos end = list.get(j);
-
-                    int rowDiff = start.row - end.row;
-                    int colDiff = start.col - end.col;
-                    Pos diff = new Pos(rowDiff, colDiff);
-
-                    Pos up = start.add(diff);
-                    Pos down = end.sub(diff);
-
-                    count += getAntinode(numOfRows, numOfCols, grid, up);
-                    count += getAntinode(numOfRows, numOfCols, grid, down);
-                }
-            }
+            count += antinodesForFrequency(lSize, list, numOfRows, numOfCols, grid);
         }
 
         System.out.println(count);
+    }
+
+    private static int antinodesForFrequency(int lSize, LinkedList<Pos> list, int numOfRows, int numOfCols, char[][] grid) {
+        int count = 0;
+        for(int i = 0; i < lSize; i++){
+            Pos start = list.get(i);
+            for(int j = i+1; j < lSize; j++){
+                Pos end = list.get(j);
+
+                int rowDiff = start.row - end.row;
+                int colDiff = start.col - end.col;
+                Pos diff = new Pos(rowDiff, colDiff);
+
+                Pos up = start.add(diff);
+                Pos down = end.sub(diff);
+
+                count += getAntinode(numOfRows, numOfCols, grid, up);
+                count += getAntinode(numOfRows, numOfCols, grid, down);
+            }
+        }
+        return count;
     }
 
     private static int getAntinode(int numOfRows, int numOfCols, char[][] grid, Pos pos) {
