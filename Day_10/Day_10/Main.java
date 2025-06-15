@@ -63,7 +63,7 @@ public class Main {
             }
         }
 
-        // e
+        // count the score of each trail and sum up
         int count = 0;
         for(int i=0; i<numOfRows; i++){
             for(int j=0; j<numOfCols; j++){
