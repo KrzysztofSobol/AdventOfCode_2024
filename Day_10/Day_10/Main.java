@@ -10,7 +10,7 @@ public class Main {
 
     public static int getScore(int[][] grid, Node trailhead){
         Stack<Node> toVisit = new Stack<>();
-        Set<String> trailheads = new HashSet<>();
+        int count = 0;
 
         int maxR = grid.length;
         int maxC = grid[0].length;
@@ -19,13 +19,13 @@ public class Main {
 
         while(!toVisit.isEmpty()){
             Node node = toVisit.pop();
-            addPossiblePaths(grid, node, maxC,  maxR, toVisit, trailheads);
+            count += addPossiblePaths(grid, node, maxC,  maxR, toVisit);
         }
 
-        return trailheads.size();
+        return count;
     }
 
-    private static int addPossiblePaths(int[][] grid, Node node, int maxC, int maxR, Stack<Node> toVisit, Set<String> trailheads) {
+    private static int addPossiblePaths(int[][] grid, Node node, int maxC, int maxR, Stack<Node> toVisit) {
         int foundEnds = 0;
         int[][] directions = {{0,1}, {1,0}, {0,-1}, {-1,0}};
 
@@ -37,7 +37,7 @@ public class Main {
                 int value = grid[newX][newY];
                 if(value == node.val+1){
                     if(value == 9){
-                        trailheads.add(newX + "," + newY);
+                        foundEnds++;
                     } else {
                         toVisit.add(new Node(value, newX, newY));
                     }
