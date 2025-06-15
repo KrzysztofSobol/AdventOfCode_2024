@@ -3,84 +3,49 @@ package Day_10;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Main {
     public record Node (int val, int x, int y) { }
 
     public static int getScore(int[][] grid, Node trailhead){
         Stack<Node> toVisit = new Stack<>();
+        Set<String> trailheads = new HashSet<>();
+
         int maxR = grid.length;
         int maxC = grid[0].length;
-        int score = 0;
 
         toVisit.add(trailhead);
 
         while(!toVisit.isEmpty()){
             Node node = toVisit.pop();
-            score += addPossiblePaths(grid, node, maxC,  maxR, toVisit);
+            addPossiblePaths(grid, node, maxC,  maxR, toVisit, trailheads);
         }
 
-        return score;
+        return trailheads.size();
     }
 
-    private static int addPossiblePaths(int[][] grid, Node node, int maxC, int maxR, Stack<Node> toVisit) {
+    private static int addPossiblePaths(int[][] grid, Node node, int maxC, int maxR, Stack<Node> toVisit, Set<String> trailheads) {
         int foundEnds = 0;
-        if(node.y+1 < maxC){
-            int value = grid[node.x][node.y+1];
-            if(value == node.val+1){
-                if(value == 9){
-                    foundEnds++;
-                } else {
-                    toVisit.add(new Node(value, node.x, node.y+1));
+        int[][] directions = {{0,1}, {1,0}, {0,-1}, {-1,0}};
+
+        for(int[] dir : directions){
+            int newX = node.x + dir[0];
+            int newY = node.y + dir[1];
+
+            if(newX < maxR && newX >= 0 && newY < maxC && newY >= 0){
+                int value = grid[newX][newY];
+                if(value == node.val+1){
+                    if(value == 9){
+                        trailheads.add(newX + "," + newY);
+                    } else {
+                        toVisit.add(new Node(value, newX, newY));
+                    }
                 }
-                grid[node.x][node.y+1] = -1;
-            }
-        }
-        if(node.x+1 < maxR){
-            int value = grid[node.x+1][node.y];
-            if(value == node.val+1){
-                if(value == 9){
-                    foundEnds++;
-                } else {
-                    toVisit.add(new Node(value, node.x+1, node.y));
-                }
-                grid[node.x+1][node.y] = -1;
-            }
-        }
-        if(node.y-1 >= 0){
-            int value = grid[node.x][node.y-1];
-            if(value == node.val+1){
-                if(value == 9){
-                    foundEnds++;
-                } else {
-                    toVisit.add(new Node(value, node.x, node.y-1));
-                }
-                grid[node.x][node.y-1] = -1;
-            }
-        }
-        if(node.x-1 >= 0){
-            int value = grid[node.x-1][node.y];
-            if(value == node.val+1){
-                if(value == 9){
-                    foundEnds++;
-                } else {
-                    toVisit.add(new Node(value, node.x-1, node.y));
-                }
-                grid[node.x-1][node.y] = -1;
             }
         }
         return foundEnds;
     }
-
-    public static int[][] copyGrid(int[][] original) {
-        return Arrays.stream(original)
-                .map(int[]::clone)
-                .toArray(int[][]::new);
-    }
-
 
     public static void main(String[] args) throws IOException {
         final String filePath = "Day_10/data.txt";
@@ -103,7 +68,7 @@ public class Main {
         for(int i=0; i<numOfRows; i++){
             for(int j=0; j<numOfCols; j++){
                 if(grid[i][j] == 0){
-                    count += getScore(copyGrid(grid), new Node(grid[i][j], i, j));
+                    count += getScore(grid, new Node(grid[i][j], i, j));
                 }
             }
         }
