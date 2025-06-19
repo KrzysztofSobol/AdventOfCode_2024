@@ -8,64 +8,67 @@ import java.util.List;
 
 public class Main {
     static HashSet<String> visited = new HashSet<>();
+    static HashSet<String> currentRegion = new HashSet<>();
     static int ROWS = 0;
     static int COLS = 0;
 
-
-    public static int gardenScan(char[][] grid, int x, int y){
+    public static void gardenScan(char[][] grid, int x, int y){
         visited.add(x + "," + y);
+        currentRegion.add(x + "," + y);
         char type = grid[x][y];
-        int fencesTotal = 0;
 
-        if(y+1 < COLS){
-            if(!visited.contains(x + "," + (y+1)) && grid[x][y+1] == type){
-                fencesTotal += gardenScan(grid, x, y+1);
-            } else {
-                if(grid[x][y+1] != type){
-                    fencesTotal++;
-                }
+        int[] dx = {-1, 0, 1, 0};
+        int[] dy = {0, 1, 0, -1};
+
+        for(int i=0; i<4; i++){
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if(nx >= 0 && nx < ROWS && ny >= 0 && ny < COLS && !visited.contains(nx + "," + ny) && grid[nx][ny] == type){
+                gardenScan(grid, nx, ny);
             }
-        } else {
-            fencesTotal++;
+        }
+    }
+
+    public static boolean isInRegion(int x, int y){
+        return currentRegion.contains(x + "," + y);
+    }
+
+    public static int countSides(char[][] grid){
+        int corners = 0;
+
+        for(String cell : currentRegion){
+            String[] parts = cell.split(",");
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+
+            // top left corner
+            boolean top = isInRegion(x-1, y);
+            boolean left = isInRegion(x, y-1);
+            boolean topleft = isInRegion(x-1, y-1);
+            if((!top && !left) || (top && left && !topleft)){
+                corners++;
+            }
+
+            boolean right = isInRegion(x, y+1);
+            boolean topRight = isInRegion(x-1, y+1);
+            if((!top && !right) || (top && right && !topRight)){
+                corners++;
+            }
+
+            boolean bottom = isInRegion(x+1, y);
+            boolean bottomLeft = isInRegion(x+1, y-1);
+            if((!bottom && !left ) || (bottom && left && !bottomLeft)){
+                corners++;
+            }
+
+            boolean bottomRight = isInRegion(x+1, y+1);
+            if((!bottom && !right) || (bottom && right && !bottomRight)){
+                corners++;
+            }
         }
 
-        if(x+1 < ROWS){
-            if(!visited.contains((x+1) + "," + y) && grid[x+1][y] == type){
-                fencesTotal += gardenScan(grid, x+1, y);
-            } else {
-                if(grid[x+1][y] != type){
-                    fencesTotal++;
-                }
-            }
-        } else {
-            fencesTotal++;
-        }
-
-        if(y-1 >= 0){
-            if(!visited.contains(x + "," + (y-1)) && grid[x][y-1] == type){
-                fencesTotal += gardenScan(grid, x, y-1);
-            } else {
-                if(grid[x][y-1] != type){
-                    fencesTotal++;
-                }
-            }
-        } else {
-            fencesTotal++;
-        }
-
-        if(x-1 >= 0){
-            if(!visited.contains((x-1) + "," + y) && grid[x-1][y] == type){
-                fencesTotal += gardenScan(grid, x-1, y);
-            } else {
-                if(grid[x-1][y] != type){
-                    fencesTotal++;
-                }
-            }
-        } else {
-            fencesTotal++;
-        }
-
-        return fencesTotal;
+        return corners;
     }
 
     public static void main(String[] args) throws IOException {
@@ -92,15 +95,13 @@ public class Main {
             for(int j=0; j<COLS; j++){
                 char c = grid[i][j];
                 if(!visited.contains(i + "," +j)){
+                    currentRegion.clear();
+                    gardenScan(grid, i, j);
 
-                    int perimeter = gardenScan(grid, i, j);
+                    int areaSize = currentRegion.size();
+                    int sides = countSides(grid);
 
-                    int visitedSize = visited.size();
-                    int region = visitedSize - lastVisitedSize;
-                    System.out.println(region + " * " + perimeter);
-                    sumTotal += (region * perimeter);
-
-                    lastVisitedSize = visitedSize;
+                    sumTotal += (areaSize * sides);
                 }
             }
         }
