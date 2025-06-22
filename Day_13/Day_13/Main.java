@@ -54,17 +54,21 @@ class Main {
             String lineP = data.get(i+2);
 
             List<BigInteger> v = new LinkedList<>();
-            for(String line : List.of(lineA, lineB, lineP)){
+            for(String line : List.of(lineA, lineB)){
                 Matcher matcher = pattern.matcher(line);
                 while (matcher.find()) {
                     v.add(BigInteger.valueOf(Long.parseLong(matcher.group(1))));
                 }
             }
 
+            Matcher matcher = pattern.matcher(lineP);
+            while (matcher.find()){
+                v.add(BigInteger.valueOf(Long.parseLong(matcher.group(1))).add(BigInteger.valueOf(10000000000000L)));
+            }
+
             BigInteger result = solveMachinery(v.get(0), v.get(1), v.get(2), v.get(3), v.get(4), v.get(5));
 
             if(!result.equals(minusOne)){
-                System.out.println(i+1);
                 tokensUsed = tokensUsed.add(result);
             }
         }
