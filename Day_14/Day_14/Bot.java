@@ -13,40 +13,19 @@ public class Bot {
     }
 
     public void tick(int ticks, int rows, int cols){
-        int totalX = ticks * dx;
-        int totalY = ticks * dy;
+        int newPosX = posX + (ticks * dx);
+        int newPosY = posY + (ticks * dy);
 
-        int posXSum = posX + totalX;
-        int posYSum = posY + totalY;
+        posX = wrapPosition(newPosX, rows);
+        posY = wrapPosition(newPosY, cols);
+    }
 
-        if(posXSum < 0){
-            int times = posXSum / rows;
-            int remainder = posXSum - (rows*times);
-            if(remainder == 0){
-                posX = 0;
-            } else{
-                posX = rows + remainder;
-            }
-        } else if (posXSum >= rows){
-            int times = posXSum / rows;
-            posX = posXSum - (rows * times);
+    private int wrapPosition(int position, int bound) {
+        if (position >= 0) {
+            return position % bound;
         } else {
-            posX = posXSum;
-        }
-
-        if(posYSum < 0){
-            int times = posYSum / cols;
-            int remainder = posYSum - (cols*times);
-            if(remainder == 0){
-                posX = 0;
-            } else{
-                posY = cols + remainder;
-            }
-        } else if (posYSum >= cols){
-            int times = posYSum / cols;
-            posY = posYSum - (cols * times);
-        } else {
-            posY = posYSum;
+            int remainder = position % bound;
+            return remainder == 0 ? 0 : bound + remainder;
         }
     }
 
