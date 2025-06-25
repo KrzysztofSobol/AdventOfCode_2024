@@ -80,9 +80,22 @@ public class Main {
         }
 
 
-        for(Bot bot : bots){
-            bot.tick(100, ROWS, COLS);
-            space[bot.posX][bot.posY]++;
+        for(int k=1; k<=100000; k++){
+            for(Bot bot : bots){
+                bot.tick(k, ROWS, COLS);
+                space[bot.posX][bot.posY]++;
+            }
+
+            if(findTree(space)){
+                System.out.println("Found the tree after " + k + " seconds");
+                break;
+            }
+
+            for (int i=0; i<ROWS; i++){
+                for (int j=0; j<COLS; j++){
+                    space[i][j] = 0;
+                }
+            }
         }
 
         for (int i=0; i<ROWS; i++){
