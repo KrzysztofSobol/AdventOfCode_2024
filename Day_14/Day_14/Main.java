@@ -82,7 +82,7 @@ public class Main {
 
         for(int k=1; k<=100000; k++){
             for(Bot bot : bots){
-                bot.tick(k, ROWS, COLS);
+                bot.tick(1, ROWS, COLS);
                 space[bot.posX][bot.posY]++;
             }
 
