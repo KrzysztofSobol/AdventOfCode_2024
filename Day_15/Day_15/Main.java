@@ -10,21 +10,69 @@ public class Main {
         int[] direction = getDirection(move);
         int newRow = row + direction[0];
         int newCol = col + direction[1];
-        char nextTile = map[newRow][newCol];
-        int[] newPos = new int[]{newRow, newCol};
 
-        if (nextTile == 'O'){
-            move(map, move, newRow, newCol);
+        if(!canMove(map, move, row, col)){
+            return new int[]{row, col};
         }
 
-        nextTile = map[newRow][newCol];
+        performMove(map, move, row, col);
+        return new int[]{newRow, newCol};
+    }
+
+    public static boolean canMove(char[][] map, char move, int row, int col) {
+        int[] direction = getDirection(move);
+        int newRow = row + direction[0];
+        int newCol = col + direction[1];
+        char nextTile = map[newRow][newCol];
+        if(nextTile == '#'){
+            return false;
+        }
+
+        if(nextTile == '.'){
+            return true;
+        }
+
+        if(move == '<' || move == '>'){
+            if (nextTile == '[' || nextTile == ']') {
+                return canMove(map, move, newRow, newCol);
+            }
+        } else {
+            if(nextTile == '['){
+                return canMove(map, move, newRow, newCol) && canMove(map, move, newRow, newCol + 1);
+            } else if (nextTile == ']') {
+                return canMove(map, move, newRow, newCol) && canMove(map, move, newRow, newCol - 1);
+            }
+        }
+
+        return false;
+    }
+
+    public static void performMove(char[][] map, char move, int row, int col){
+        int[] direction = getDirection(move);
+        int newRow = row + direction[0];
+        int newCol = col + direction[1];
+        char nextTile = map[newRow][newCol];
 
         if(nextTile == '.'){
             swap(map, newRow, newCol, row, col);
-            return newPos;
         }
 
-        return new int[]{row, col};
+        if(move == '<' || move == '>'){
+            if (nextTile == '[' || nextTile == ']') {
+                performMove(map, move, newRow, newCol);
+                swap(map, newRow, newCol, row, col);
+            }
+        } else {
+            if(nextTile == '['){
+                performMove(map, move, newRow, newCol);
+                performMove(map, move, newRow, newCol+1);
+                swap(map, newRow, newCol, row, col);
+            } else if (nextTile == ']') {
+                performMove(map, move, newRow, newCol);
+                performMove(map, move, newRow, newCol-1);
+                swap(map, newRow, newCol, row, col);
+            }
+        }
     }
 
     public static void swap(char[][] map, int a, int b, int c, int d){
@@ -73,17 +121,26 @@ public class Main {
         final int ROWS = count;
 
         char[] moves = sb.toString().toCharArray();
-        char[][] warehouse = new char[ROWS][COLS];
+        char[][] warehouse = new char[ROWS][COLS * 2];
         int botX = 0;
         int botY = 0;
 
         for(int i=0; i<ROWS; i++){
             char[] line = data.get(i).toCharArray();
             for(int j=0; j<COLS; j++){
-                warehouse[i][j] = line[j];
-                if(line[j] == '@'){
+                char c = line[j];
+                if(c == '.' || c == '#'){
+                    warehouse[i][j*2] = line[j];
+                    warehouse[i][j*2+1] = line[j];
+                } else if (c == 'O'){
+                    warehouse[i][j*2] = '[';
+                    warehouse[i][j*2+1] = ']';
+                } else {
+                    warehouse[i][j*2] = '@';
+                    warehouse[i][j*2+1] = '.';
+
                     botX = i;
-                    botY = j;
+                    botY = j*2;
                 }
             }
         }
@@ -95,11 +152,18 @@ public class Main {
             botY = currentPos[1];
         }
 
+        for(int i=0; i<ROWS; i++){
+            for(int j=0; j<COLS*2; j++){
+                System.out.print(warehouse[i][j]);
+            }
+            System.out.println();
+        }
+
         int sumGPS = 0;
 
         for(int i=0; i<ROWS; i++){
-            for(int j=0; j<COLS; j++){
-                if(warehouse[i][j] == 'O'){
+            for(int j=0; j<COLS*2; j++){
+                if(warehouse[i][j] == '['){
                     sumGPS += (100 * i) + j;
                 }
             }
