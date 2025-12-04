@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
     public static boolean isInvalid(long number){
@@ -39,6 +40,48 @@ public class Main {
         return rangeSum;
     }
 
+    public static List<Integer> getDivisors(long number){
+        List<Integer> divisors = new LinkedList<>();
+
+        for(int i=1; i<=Math.sqrt(number); i++){
+            if(number % i == 0){
+                divisors.add(i);
+                if(i != number/i){
+                    divisors.add((int)(number/i));
+                }
+            }
+        }
+
+        return divisors;
+    }
+
+    public static String buildToCompare(int div, String original){
+        long times = original.length() / div;
+        String pattern = original.substring(0,div);
+
+        return pattern.repeat((int)times);
+    }
+
+    public static BigInteger getInvalidIds2(long start, long end){
+        BigInteger rangeSum = BigInteger.ZERO;
+
+        for(long i = start; i<=end; i++){
+            String s = String.valueOf(i);
+            List<Integer> divisors = getDivisors(s.length());
+            for(Integer d : divisors){
+                if(d == s.length()) continue;
+
+                String patternString = buildToCompare(d, s);
+
+                if(Objects.equals(s, patternString)){
+                    rangeSum = rangeSum.add(BigInteger.valueOf(i));
+                    break;
+                }
+            }
+        }
+        return rangeSum;
+    }
+
     public static void main(String[] args) throws IOException {
         final String path = "AdventOfCode_2025/Day_02/data.txt";
         String dataFromFile = Files.readString(Paths.get(path));
@@ -55,11 +98,20 @@ public class Main {
             ranges.add(new Range(start, end));
         }
 
+        // part 1
         BigInteger invalidIdSum = BigInteger.ZERO;
         for(Range r : ranges){
             invalidIdSum = invalidIdSum.add(getInvalidIds(r.start, r.end));
         }
 
-        System.out.println(invalidIdSum);
+        // part 2
+        BigInteger invalidIdSum2 = BigInteger.ZERO;
+        for(Range r : ranges){
+            invalidIdSum2 = invalidIdSum2.add(getInvalidIds2(r.start, r.end));
+        }
+
+
+
+        System.out.println(invalidIdSum2);
     }
 }
